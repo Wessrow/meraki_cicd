@@ -14,31 +14,42 @@ class MerakiSDK:
     def __init__(self, token, verify=False):
         """ Initial constructor for the class """
         self.base_url = "https://api.meraki.com/api/v1"
-        self.token = token
+        self.headers = { "X-Cisco-Meraki-API-Key": token }
+        self.verify = verify
 
-        if verify is False:
-            self.verify = verify
+        if verify == False:
             requests.urllib3.disable_warnings()
 
-    def _req(self, resource, method="GET"):
+    def _req(self, resource, payload=None, method="GET"):
         """ Temp main-function """
 
         url = f"{self.base_url}{resource}"
-        response = requests.request(method=method, url=url)
-        return response
+        response = requests.request(url=url,
+                                    method=method,
+                                    data=payload,
+                                    headers=self.headers,
+                                    verify=self.verify)
+        
+        if response.status_code in [200, 201, 204]:
+            return response
 
     def get_orgs(self):
         """ Return available orgs """
-        response = self._req(self, "/organizations").json()
+        response = self._req("/organizations")
 
         return response
 
     def get_networks(self):
         """ Return available networks in an org """
-        response = self._req(self, "/networks").json()
+        response = self._req("/networks")
 
         return response
 
 if __name__ == "__main__":
 
-    print(os.environ["MERAKI_API_TOKEN"])
+    token = os.environ["MERAKI_API_TOKEN"]
+
+    test = MerakiSDK(token=token)
+
+    print(test.get_orgs())
+
