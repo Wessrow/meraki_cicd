@@ -5,7 +5,6 @@ Written by Gustav Larsson
 """
 
 import os
-import json
 import requests
 
 class MerakiSDK:
@@ -59,7 +58,8 @@ if __name__ == "__main__":
 
     test = MerakiSDK(token=os.environ["MERAKI_API_TOKEN"])
 
-    jresp = test.get_orgs().json()
-    print(json.dumps(jresp, indent=2))
+    print(test.get_orgs())
+    #jresp = test.get_orgs().json()
+    #print(json.dumps(jresp, indent=2))
     #print(json.dumps(test.get_org_networks(865776), indent=2))
     #print(json.dumps(test.get_network_devices("L_575334852396597361"), indent=2))
