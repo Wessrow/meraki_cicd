@@ -5,6 +5,7 @@ Written by Gustav Larsson
 """
 
 import os
+import json
 import requests
 
 class MerakiSDK:
@@ -30,14 +31,11 @@ class MerakiSDK:
                                     headers=self.headers,
                                     verify=self.verify)
 
-        if response.status_code in [200, 201, 204]:
+        if response.status_code in [400, 401, 403, 404]:
 
-            jresp = response.json()
+            return f"Error with request: {response.status_code}"
 
-        else:
-            jresp = f"Error with request: {response.status_code}"
-
-        return jresp
+        return response
 
     def get_orgs(self):
         """ Return available orgs """
@@ -45,9 +43,15 @@ class MerakiSDK:
 
         return response
 
-    def get_networks(self):
+    def get_org_networks(self, org_id):
         """ Return available networks in an org """
-        response = self._req("/networks")
+        response = self._req(f"/organizations/{org_id}/networks")
+
+        return response
+
+    def get_network_devices(self, network_id):
+        """ Return devices in a network """
+        response = self._req(f"/networks/{network_id}/devices")
 
         return response
 
@@ -55,4 +59,7 @@ if __name__ == "__main__":
 
     test = MerakiSDK(token=os.environ["MERAKI_API_TOKEN"])
 
-    print(test.get_orgs())
+    jresp = test.get_orgs().json()
+    print(json.dumps(jresp, indent=2))
+    #print(json.dumps(test.get_org_networks(865776), indent=2))
+    #print(json.dumps(test.get_network_devices("L_575334852396597361"), indent=2))
