@@ -2,6 +2,13 @@ language: python
 python:
   - "3.8"
 
-before_script:
+services:
+  - docker
+
+before_tests:
   - "pip install -r requirements.txt"
   - "pylint *.py"
+
+tests:
+  - "docker build -t dockertest ."
+  - "docker run dockertest"

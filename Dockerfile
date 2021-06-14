@@ -1,9 +1,13 @@
-FROM ubuntu:18.04
+FROM python:3.8.10-alpine
 
-ENV TESTVAR=blahblah
+ENV MERAKI_API_TOKEN="PLACEHOLDER - Run container with -e MERAKI_API_TOKEN=<MerakiAPIToken>"
 
-RUN "apt-get update -y && apt-get install -y python3"
+WORKDIR /app/
+
+COPY . /app/
+
+RUN pip install -r requirements.txt
 
 ENTRYPOINT ["python3"]
 
-RUN meraki_sdk.py
+CMD ["meraki_sdk.py"]
