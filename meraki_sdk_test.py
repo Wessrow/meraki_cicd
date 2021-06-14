@@ -12,7 +12,7 @@ sdk_instance = MerakiSDK(token=os.environ["MERAKI_API_TOKEN"], verify=False)
 def test_key_exist():
     """ Testing so a key is exported """
 
-    assert os.environ["wowapi_id"]
+    assert os.environ["MERAKI_API_TOKEN"]
 
 def test_valid_key():
     """ Testing so exported key is valid """
