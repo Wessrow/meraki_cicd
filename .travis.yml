@@ -8,6 +8,7 @@ services:
 before_script:
   - "pip install -r requirements.txt"
   - "pylint *.py"
+  - "pytest"
 
 script:
   - "docker build -t dockertest ."
