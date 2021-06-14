@@ -17,7 +17,7 @@ class MerakiSDK:
         self.headers = { "X-Cisco-Meraki-API-Key": token }
         self.verify = verify
 
-        if verify == False:
+        if verify is False:
             requests.urllib3.disable_warnings()
 
     def _req(self, resource, payload=None, method="GET"):
@@ -29,9 +29,15 @@ class MerakiSDK:
                                     data=payload,
                                     headers=self.headers,
                                     verify=self.verify)
-        
+
         if response.status_code in [200, 201, 204]:
-            return response
+
+            jresp = response.json()
+
+        else:
+            jresp = f"Error with request: {response.status_code}"
+
+        return jresp
 
     def get_orgs(self):
         """ Return available orgs """
@@ -47,9 +53,6 @@ class MerakiSDK:
 
 if __name__ == "__main__":
 
-    token = os.environ["MERAKI_API_TOKEN"]
-
-    test = MerakiSDK(token=token)
+    test = MerakiSDK(token=os.environ["MERAKI_API_TOKEN"])
 
     print(test.get_orgs())
-
